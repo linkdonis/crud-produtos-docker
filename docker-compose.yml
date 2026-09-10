@@ -1,0 +1,98 @@
+# Define os serviços que fazem parte da aplicação.
+services:
+
+  # Serviço responsável por executar a aplicação PHP.
+  app:
+
+    # Indica que a imagem da aplicação será construída a partir de um Dockerfile.
+    build:
+
+      # Define a pasta atual como contexto para a construção da imagem.
+      context: .
+
+      # Define o arquivo Dockerfile utilizado na construção da imagem.
+      dockerfile: Dockerfile
+
+    # Define um nome fixo para o container da aplicação.
+    container_name: crud-produtos-app
+
+    # Mapeia a porta 8080 do computador para a porta 80 do Apache no container.
+    ports:
+
+      # Permite acessar a aplicação pelo endereço http://localhost:8080.
+      - "8080:80"
+
+    # Define as variáveis de ambiente utilizadas pela aplicação PHP.
+    environment:
+
+      # Informa que o banco pode ser encontrado pelo nome do serviço "db".
+      DB_HOST: db
+
+      # Define o usuário utilizado pela aplicação para acessar o MySQL.
+      DB_USER: root
+
+      # Define a senha utilizada pelo usuário do banco.
+      DB_PASSWORD: root
+
+      # Define o nome do banco de dados utilizado pela aplicação.
+      DB_NAME: crud_produtos
+
+    # Monta a pasta app do computador dentro da pasta do Apache no container.
+    volumes:
+
+      # Permite que os arquivos PHP locais sejam utilizados pelo Apache.
+      - ./app:/var/www/html
+
+    # Conecta a aplicação à rede personalizada do projeto.
+    networks:
+
+      # Define a rede utilizada pelo container da aplicação.
+      - crud-rede
+
+
+  # Serviço responsável por executar o banco de dados MySQL.
+  db:
+
+    # Utiliza a imagem oficial do MySQL na versão 8.0.
+    image: mysql:8.0
+
+    # Define um nome fixo para o container do banco.
+    container_name: crud-produtos-db
+
+    # Define as configurações iniciais do banco de dados.
+    environment:
+
+      # Define a senha do usuário root do MySQL.
+      MYSQL_ROOT_PASSWORD: root
+
+      # Cria o banco de dados chamado crud_produtos.
+      MYSQL_DATABASE: crud_produtos
+
+    # Define onde os dados do MySQL serão armazenados de forma persistente.
+    volumes:
+
+      # Utiliza o volume mysql-dados para armazenar os arquivos do banco.
+      - mysql-dados:/var/lib/mysql
+
+    # Conecta o banco à mesma rede utilizada pela aplicação.
+    networks:
+
+      # Permite que o serviço app encontre o banco através do nome "db".
+      - crud-rede
+
+
+# Define as redes utilizadas pelos containers.
+networks:
+
+  # Cria a rede personalizada chamada crud-rede.
+  crud-rede:
+
+    # Utiliza o driver bridge para comunicação entre os containers.
+    driver: bridge
+
+
+# Define os volumes persistentes utilizados pelo projeto.
+volumes:
+
+  # Define o volume responsável por armazenar os dados do MySQL.
+  mysql-dados:
