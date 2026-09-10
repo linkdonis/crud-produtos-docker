@@ -45,3 +45,15 @@ trab_devops/
 ├── Dockerfile
 ├── docker-compose.yml
 └── README.md
+
+## Pré-requisitos
+
+- Docker
+- Docker Compose
+
+## Passo a Passo para Executar o Projeto
+
+1. **Clonar o repositório:**
+   ```bash
+   git clone [https://github.com/linkdonis/crud-produtos-docker.git](https://github.com/linkdonis/crud-produtos-docker.git)
+   cd crud-produtos-docker
