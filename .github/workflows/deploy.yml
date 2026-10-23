@@ -1,0 +1,27 @@
+
+name: Deploy CRUD with Self-Hosted Runner
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy on Ubuntu Server
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check Docker
+        run: |
+          docker --version
+          docker compose version
+
+      - name: Start CRUD application
+        run: |
+          docker compose up -d --build
+          docker compose ps
